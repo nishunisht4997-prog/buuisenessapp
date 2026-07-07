@@ -50,9 +50,9 @@ export default function SearchSection() {
   };
 
   return (
-    <div className="mt-4 px-6">
+    <div className="mt-4 px-4 sm:px-6">
       {/* TEXT */}
-      <div className="text-3xl font-semibold flex gap-2 overflow-hidden h-12 mb-4">
+      <div className="text-2xl sm:text-3xl font-semibold flex gap-2 overflow-hidden h-12 mb-4">
         <span>Search across</span>
 
         <div className="relative h-12 overflow-hidden">
@@ -70,29 +70,31 @@ export default function SearchSection() {
       </div>
 
       {/* SEARCH BAR */}
-      <div className="bg-white shadow-md rounded-lg flex items-center p-3 gap-3 max-w-2xl">
-        <input
-          type="text"
-          placeholder="📍 Bhubaneswar"
-          value={location}
-          onChange={(e) => setLocation(e.target.value)}
-          className="border px-4 py-2 rounded w-1/4 outline-none"
-        />
+      <div className="bg-white shadow-md rounded-lg p-3 max-w-2xl">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+          <input
+            type="text"
+            placeholder="📍 Bhubaneswar"
+            value={location}
+            onChange={(e) => setLocation(e.target.value)}
+            className="border px-4 py-2 rounded w-full sm:w-1/4 outline-none"
+          />
 
-        <input
-          type="text"
-          placeholder="Search for Spa, Salon, Restaurant..."
-          value={keyword}
-          onChange={(e) => setKeyword(e.target.value)}
-          className="border px-4 py-2 rounded w-2/4 outline-none"
-        />
+          <input
+            type="text"
+            placeholder="Search for Spa, Salon, Restaurant..."
+            value={keyword}
+            onChange={(e) => setKeyword(e.target.value)}
+            className="border px-4 py-2 rounded w-full sm:w-2/4 outline-none"
+          />
 
-        <button
-          onClick={handleSearch}
-          className="bg-purple-800 text-white px-6 py-2 rounded hover:bg-purple-700"
-        >
-          {loading ? "Searching..." : "🔍 Search"}
-        </button>
+          <button
+            onClick={handleSearch}
+            className="bg-purple-800 text-white px-6 py-2 rounded hover:bg-purple-700 w-full sm:w-auto"
+          >
+            {loading ? "Searching..." : "🔍 Search"}
+          </button>
+        </div>
       </div>
 
       {/* ERROR */}

@@ -14,7 +14,7 @@ export default function BusinessLayout({ children }) {
   return (
     <div className="min-h-screen bg-gray-100">
       {/* SIDEBAR */}
-      <aside className="fixed top-0 left-0 h-screen w-64 bg-white shadow-lg p-5 flex flex-col">
+      <aside className="hidden md:flex fixed top-0 left-0 h-screen w-64 bg-white shadow-lg p-5 flex-col">
         <h2 className="text-2xl font-bold text-blue-600 mb-8">
           Business Panel
         </h2>

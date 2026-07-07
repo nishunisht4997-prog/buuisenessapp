@@ -23,7 +23,7 @@ const cards = [
 
 export default function RightCards() {
   return (
-    <div className="grid grid-cols-2 gap-4 h-[320px]">
+    <div className="grid grid-cols-2 gap-4 h-[260px] sm:h-[320px] lg:h-[360px]">
       {cards.map((card, i) => (
         <div key={i} className="relative rounded-xl overflow-hidden">
           <img src={card.image} className="w-full h-full object-cover" />

@@ -14,15 +14,15 @@ export default function Home() {
     <>
       <Navbar />
       <SearchSection />
-      <div className="max-w-7xl mx-auto mt-6 px-6">
+      <div className="max-w-7xl mx-auto mt-6 px-4 sm:px-6">
         <div className="grid grid-cols-12 gap-6">
           {/* LEFT: IMAGE SLIDER */}
-          <div className="col-span-8">
+          <div className="col-span-12 lg:col-span-8">
             <ImageSlider />
           </div>
 
           {/* RIGHT: CARDS */}
-          <div className="col-span-4">
+          <div className="col-span-12 lg:col-span-4">
             <RightCards />
           </div>
         </div>

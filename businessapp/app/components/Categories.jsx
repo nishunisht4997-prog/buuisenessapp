@@ -30,13 +30,12 @@ const categories = [
 ];
 
  return (
-    <div className="grid grid-cols-5 gap-6">
+    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
       {categories.map((cat) => (
         <div
           key={cat.slug}
           onClick={() => router.push(`/category/${cat.slug}`)}
-          className="cursor-pointer flex flex-col items-center"
-        >
+          className="cursor-pointer flex flex-col items-center">
           {/* ICON / IMAGE */}
           <div className="w-20 h-20 flex items-center justify-center rounded-xl border bg-white">
             <span className="text-3xl">{cat.icon}</span>
