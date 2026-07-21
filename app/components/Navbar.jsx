@@ -13,6 +13,8 @@ import {
   Globe,
   TrendingUp,
   Building2,
+  Menu,
+  X,
   Palette,
   Utensils,
   Hotel,
@@ -21,7 +23,8 @@ import {
   Hospital,
   HardHat,
   Dumbbell,
-  Package
+  Package,
+  Home
 } from "lucide-react";
 import LoginPopup from "./LoginPopup";
 import SavedBusinessesDrawer from "./SavedBusinessesDrawer";
@@ -55,6 +58,7 @@ export default function Navbar() {
   const [bookmarkCount, setBookmarkCount] = useState(0);
   const [selectedCity, setSelectedCity] = useState("Bhubaneswar");
   const [showCityDropdown, setShowCityDropdown] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const cityDropdownRef = useRef(null);
 
   useEffect(() => {
@@ -101,43 +105,51 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* 🔹 Glassmorphic Navigation Header */}
+      {/* 🔹 Glassmorphic Header */}
       <header className="w-full glass-nav sticky top-0 z-40 transition-all duration-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-4">
           
           {/* Glowing Logo & City Selector */}
-          <div className="flex items-center gap-4 sm:gap-6">
+          <div className="flex items-center gap-3 sm:gap-6">
+            {/* Mobile Hamburger Menu Toggle */}
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="md:hidden p-2 text-slate-300 hover:text-white rounded-xl bg-slate-900 border border-slate-800"
+              aria-label="Toggle Mobile Menu"
+            >
+              {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+            </button>
+
             {/* Glow Badge Logo */}
             <div
               onClick={() => router.push("/")}
-              className="flex items-center gap-2.5 cursor-pointer group"
+              className="flex items-center gap-2 cursor-pointer group"
             >
               <div className="relative">
-                <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-amber-500 via-orange-500 to-indigo-600 flex items-center justify-center text-white font-black text-xl shadow-lg shadow-amber-500/20 group-hover:scale-105 transition-transform duration-300">
+                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-gradient-to-tr from-amber-500 via-orange-500 to-indigo-600 flex items-center justify-center text-white font-black text-lg sm:text-xl shadow-lg shadow-amber-500/20 group-hover:scale-105 transition-transform duration-300">
                   A
                 </div>
-                <span className="absolute -inset-0.5 rounded-2xl bg-amber-500/30 blur-md opacity-0 group-hover:opacity-100 transition-opacity" />
               </div>
 
-              <h1 className="text-xl sm:text-2xl font-black tracking-tight leading-none whitespace-nowrap">
+              <h1 className="text-lg sm:text-2xl font-black tracking-tight leading-none whitespace-nowrap">
                 <span className="text-amber-500">Apna</span>
                 <span className="text-white">Biz</span>
               </h1>
             </div>
 
-            {/* City Dropdown Selector with GPS Indicator */}
+            {/* City Dropdown Selector */}
             <div className="relative" ref={cityDropdownRef}>
               <button
                 onClick={() => setShowCityDropdown(!showCityDropdown)}
-                className="flex items-center gap-1.5 bg-slate-900/90 hover:bg-slate-800 text-slate-200 text-xs sm:text-sm font-extrabold px-3.5 py-2 rounded-xl border border-slate-800 transition-colors shadow-sm"
+                className="flex items-center gap-1.5 bg-slate-900/90 hover:bg-slate-800 text-slate-200 text-xs sm:text-sm font-extrabold px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-xl border border-slate-800 transition-colors shadow-sm"
               >
-                <MapPin size={15} className="text-amber-400 shrink-0" />
-                <span className="truncate max-w-[100px] sm:max-w-[130px]">{selectedCity}</span>
+                <MapPin size={14} className="text-amber-400 shrink-0" />
+                <span className="truncate max-w-[80px] sm:max-w-[130px]">{selectedCity}</span>
                 <ChevronDown size={14} className={`text-slate-400 transition-transform duration-200 ${showCityDropdown ? "rotate-180" : ""}`} />
               </button>
 
               {showCityDropdown && (
-                <div className="absolute top-full left-0 mt-2 w-60 bg-slate-900 rounded-2xl shadow-2xl border border-slate-800 p-2.5 z-50 animate-in fade-in slide-in-from-top-2 duration-200 text-white">
+                <div className="absolute top-full left-0 mt-2 w-56 sm:w-60 bg-slate-900 rounded-2xl shadow-2xl border border-slate-800 p-2.5 z-50 animate-in fade-in slide-in-from-top-2 duration-200 text-white">
                   <div className="text-[10px] font-extrabold text-slate-400 px-3 py-1 uppercase tracking-wider flex items-center justify-between">
                     <span>Select Location</span>
                     <span className="text-emerald-400 font-mono">GPS Active</span>
@@ -180,16 +192,17 @@ export default function Navbar() {
             {/* Free Listing CTA */}
             <button
               onClick={() => router.push("/free-listing")}
-              className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-slate-950 font-black px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm flex items-center gap-1.5 shadow-md shadow-orange-500/20 hover:shadow-lg transition-all duration-200 whitespace-nowrap"
+              className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-slate-950 font-black px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm flex items-center gap-1.5 shadow-md shadow-orange-500/20 hover:shadow-lg transition-all duration-200 whitespace-nowrap"
             >
               <PlusCircle size={16} />
-              <span>Free Listing</span>
+              <span className="hidden xs:inline">Free Listing</span>
+              <span className="xs:hidden">Add</span>
             </button>
 
             {/* Bookmark Drawer Trigger */}
             <button
               onClick={() => setShowBookmarks(true)}
-              className="relative p-2.5 text-slate-300 hover:text-amber-400 hover:bg-slate-800 rounded-xl transition-colors"
+              className="relative p-2 sm:p-2.5 text-slate-300 hover:text-amber-400 hover:bg-slate-800 rounded-xl transition-colors"
               aria-label="Saved businesses"
               title="Saved Businesses"
             >
@@ -201,7 +214,7 @@ export default function Navbar() {
               )}
             </button>
 
-            {/* Login Button */}
+            {/* Desktop Login Button */}
             <button
               onClick={() => setShowLogin(true)}
               className="hidden sm:flex items-center gap-1.5 bg-slate-900 hover:bg-slate-800 border border-slate-800 text-white font-bold px-4 py-2 rounded-xl text-xs sm:text-sm shadow-sm transition-all whitespace-nowrap"
@@ -209,21 +222,12 @@ export default function Navbar() {
               <User size={16} className="text-amber-400" />
               <span>Login / Sign Up</span>
             </button>
-
-            {/* Mobile Login Button */}
-            <button
-              onClick={() => setShowLogin(true)}
-              className="sm:hidden p-2 bg-slate-900 border border-slate-800 text-amber-400 rounded-xl"
-              aria-label="Login / Sign Up"
-            >
-              <User size={18} />
-            </button>
           </div>
         </div>
 
-        {/* 🔹 Quick Category Nav Strip (Below main header) */}
-        <div className="bg-slate-950/80 border-t border-slate-800/80 px-4 sm:px-6 py-2 overflow-x-auto no-scrollbar">
-          <div className="max-w-7xl mx-auto flex items-center gap-2 sm:gap-3">
+        {/* 🔹 Quick Category Nav Strip */}
+        <div className="bg-slate-950/80 border-t border-slate-800/80 px-4 sm:px-6 py-2 overflow-x-auto no-scrollbar hidden md:block">
+          <div className="max-w-7xl mx-auto flex items-center gap-2.5">
             <span className="text-[11px] font-extrabold text-slate-500 uppercase tracking-wider shrink-0 mr-1">
               Quick Nav:
             </span>
@@ -243,6 +247,106 @@ export default function Navbar() {
           </div>
         </div>
       </header>
+
+      {/* 🔹 MOBILE SLIDE-OVER DRAWER MENU */}
+      {mobileMenuOpen && (
+        <div className="fixed inset-0 z-50 md:hidden animate-in fade-in duration-200">
+          <div
+            className="absolute inset-0 bg-slate-950/80 backdrop-blur-md"
+            onClick={() => setMobileMenuOpen(false)}
+          />
+
+          <div className="relative w-4/5 max-w-xs bg-slate-900 border-r border-slate-800 text-slate-100 h-full p-6 shadow-2xl flex flex-col justify-between overflow-y-auto z-10">
+            <div>
+              {/* Drawer Top Header */}
+              <div className="flex items-center justify-between pb-4 border-b border-slate-800 mb-6">
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-amber-500 to-indigo-600 text-white font-black text-sm flex items-center justify-center">
+                    A
+                  </div>
+                  <span className="font-black text-base text-white">
+                    Apna<span className="text-amber-400">Biz</span>
+                  </span>
+                </div>
+                <button
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="p-1.5 text-slate-400 hover:text-white rounded-lg bg-slate-800"
+                >
+                  <X size={18} />
+                </button>
+              </div>
+
+              {/* Navigation Links List */}
+              <div className="space-y-2">
+                <button
+                  onClick={() => { router.push("/"); setMobileMenuOpen(false); }}
+                  className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold text-slate-200 hover:bg-slate-800"
+                >
+                  <Home size={16} className="text-amber-400" />
+                  <span>Home Page</span>
+                </button>
+
+                <button
+                  onClick={() => { router.push("/free-listing"); setMobileMenuOpen(false); }}
+                  className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold text-amber-400 bg-amber-500/10 border border-amber-500/20"
+                >
+                  <PlusCircle size={16} />
+                  <span>Free Business Listing</span>
+                </button>
+
+                <button
+                  onClick={() => { router.push("/business/dashboard"); setMobileMenuOpen(false); }}
+                  className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold text-slate-200 hover:bg-slate-800"
+                >
+                  <TrendingUp size={16} className="text-indigo-400" />
+                  <span>Merchant Portal</span>
+                </button>
+
+                <button
+                  onClick={() => { router.push("/admin-login"); setMobileMenuOpen(false); }}
+                  className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold text-slate-200 hover:bg-slate-800"
+                >
+                  <ShieldCheck size={16} className="text-emerald-400" />
+                  <span>Admin Sign In</span>
+                </button>
+              </div>
+
+              {/* Quick Categories List */}
+              <div className="mt-6 pt-4 border-t border-slate-800">
+                <span className="text-[10px] font-extrabold text-slate-500 uppercase tracking-wider block mb-2">
+                  Browse Categories
+                </span>
+                <div className="space-y-1">
+                  {QUICK_NAV_CATEGORIES.map((cat) => {
+                    const Icon = cat.icon;
+                    return (
+                      <button
+                        key={cat.slug}
+                        onClick={() => { router.push(`/category/${cat.slug}`); setMobileMenuOpen(false); }}
+                        className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-300 hover:bg-slate-800"
+                      >
+                        <Icon size={14} className="text-amber-400" />
+                        <span>{cat.name}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+
+            {/* Drawer Bottom Login Trigger */}
+            <div className="pt-4 border-t border-slate-800">
+              <button
+                onClick={() => { setShowLogin(true); setMobileMenuOpen(false); }}
+                className="w-full bg-slate-800 hover:bg-slate-700 text-white font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-2"
+              >
+                <User size={16} className="text-amber-400" />
+                <span>Login / Sign Up</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* ✅ LOGIN POPUP */}
       {showLogin && <LoginPopup close={() => setShowLogin(false)} />}
