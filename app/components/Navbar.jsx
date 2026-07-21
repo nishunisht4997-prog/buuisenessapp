@@ -15,7 +15,6 @@ import {
   Building2,
   Menu,
   X,
-  Palette,
   Utensils,
   Hotel,
   Sofa,
@@ -24,19 +23,20 @@ import {
   HardHat,
   Dumbbell,
   Package,
-  Home
+  Home,
+  LogIn
 } from "lucide-react";
 import LoginPopup from "./LoginPopup";
 import SavedBusinessesDrawer from "./SavedBusinessesDrawer";
 
 const CITIES = [
-  { name: "Bhubaneswar", state: "Odisha", popular: true },
-  { name: "Cuttack", state: "Odisha", popular: true },
-  { name: "Puri", state: "Odisha", popular: true },
-  { name: "Rourkela", state: "Odisha", popular: true },
-  { name: "Sambalpur", state: "Odisha", popular: false },
-  { name: "Berhampur", state: "Odisha", popular: false },
-  { name: "Balasore", state: "Odisha", popular: false },
+  { name: "Bhubaneswar", short: "BBSR", state: "Odisha", popular: true },
+  { name: "Cuttack", short: "CTC", state: "Odisha", popular: true },
+  { name: "Puri", short: "PURI", state: "Odisha", popular: true },
+  { name: "Rourkela", short: "RKL", state: "Odisha", popular: true },
+  { name: "Sambalpur", short: "SBP", state: "Odisha", popular: false },
+  { name: "Berhampur", short: "BAM", state: "Odisha", popular: false },
+  { name: "Balasore", short: "BLS", state: "Odisha", popular: false },
 ];
 
 const QUICK_NAV_CATEGORIES = [
@@ -76,8 +76,8 @@ export default function Navbar() {
 
   return (
     <>
-      {/* 🔹 Top Statistical & Trust Bar */}
-      <div className="bg-slate-950 text-slate-300 text-xs py-1.5 px-4 border-b border-slate-800/80 hidden sm:block">
+      {/* 🔹 Top Statistical & Trust Bar (Desktop only) */}
+      <div className="bg-slate-950 text-slate-300 text-xs py-1.5 px-4 border-b border-slate-800/80 hidden lg:block">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-6">
             <span className="flex items-center gap-1.5 text-amber-400 font-bold">
@@ -105,51 +105,39 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* 🔹 Glassmorphic Header */}
+      {/* 🔹 Main Glassmorphic Navbar */}
       <header className="w-full glass-nav sticky top-0 z-40 transition-all duration-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-4">
+        <div className="max-w-7xl mx-auto px-2 sm:px-6 py-2 sm:py-3 flex items-center justify-between gap-1.5 sm:gap-4">
           
-          {/* Glowing Logo & City Selector */}
-          <div className="flex items-center gap-3 sm:gap-6">
-            {/* Mobile Hamburger Menu Toggle */}
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 text-slate-300 hover:text-white rounded-xl bg-slate-900 border border-slate-800"
-              aria-label="Toggle Mobile Menu"
-            >
-              {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
-            </button>
-
-            {/* Glow Badge Logo */}
+          {/* LEFT: Logo & City Dropdown */}
+          <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
+            {/* Logo */}
             <div
               onClick={() => router.push("/")}
-              className="flex items-center gap-2 cursor-pointer group"
+              className="flex items-center gap-1 sm:gap-2 cursor-pointer group shrink-0"
             >
-              <div className="relative">
-                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-gradient-to-tr from-amber-500 via-orange-500 to-indigo-600 flex items-center justify-center text-white font-black text-lg sm:text-xl shadow-lg shadow-amber-500/20 group-hover:scale-105 transition-transform duration-300">
-                  A
-                </div>
+              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl bg-gradient-to-tr from-amber-500 via-orange-500 to-indigo-600 flex items-center justify-center text-white font-black text-sm sm:text-xl shadow-lg shadow-amber-500/20 group-hover:scale-105 transition-transform duration-300">
+                A
               </div>
-
-              <h1 className="text-lg sm:text-2xl font-black tracking-tight leading-none whitespace-nowrap">
+              <h1 className="text-sm sm:text-2xl font-black tracking-tight leading-none whitespace-nowrap">
                 <span className="text-amber-500">Apna</span>
                 <span className="text-white">Biz</span>
               </h1>
             </div>
 
             {/* City Dropdown Selector */}
-            <div className="relative" ref={cityDropdownRef}>
+            <div className="relative shrink-0" ref={cityDropdownRef}>
               <button
                 onClick={() => setShowCityDropdown(!showCityDropdown)}
-                className="flex items-center gap-1.5 bg-slate-900/90 hover:bg-slate-800 text-slate-200 text-xs sm:text-sm font-extrabold px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-xl border border-slate-800 transition-colors shadow-sm"
+                className="flex items-center gap-1 bg-slate-900/90 hover:bg-slate-800 text-slate-200 text-[11px] sm:text-sm font-extrabold px-2 sm:px-3 py-1.5 sm:py-2 rounded-xl border border-slate-800 transition-colors shadow-sm"
               >
-                <MapPin size={14} className="text-amber-400 shrink-0" />
-                <span className="truncate max-w-[80px] sm:max-w-[130px]">{selectedCity}</span>
-                <ChevronDown size={14} className={`text-slate-400 transition-transform duration-200 ${showCityDropdown ? "rotate-180" : ""}`} />
+                <MapPin size={12} className="text-amber-400 shrink-0" />
+                <span className="truncate max-w-[55px] sm:max-w-[120px]">{selectedCity}</span>
+                <ChevronDown size={12} className={`text-slate-400 transition-transform duration-200 ${showCityDropdown ? "rotate-180" : ""}`} />
               </button>
 
               {showCityDropdown && (
-                <div className="absolute top-full left-0 mt-2 w-56 sm:w-60 bg-slate-900 rounded-2xl shadow-2xl border border-slate-800 p-2.5 z-50 animate-in fade-in slide-in-from-top-2 duration-200 text-white">
+                <div className="absolute top-full left-0 mt-2 w-52 sm:w-60 bg-slate-900 rounded-2xl shadow-2xl border border-slate-800 p-2 sm:p-2.5 z-50 animate-in fade-in slide-in-from-top-2 duration-200 text-white">
                   <div className="text-[10px] font-extrabold text-slate-400 px-3 py-1 uppercase tracking-wider flex items-center justify-between">
                     <span>Select Location</span>
                     <span className="text-emerald-400 font-mono">GPS Active</span>
@@ -187,45 +175,55 @@ export default function Navbar() {
             </div>
           </div>
 
-          {/* Right Action Controls */}
-          <div className="flex items-center gap-2 sm:gap-3">
-            {/* Free Listing CTA */}
+          {/* RIGHT: Action Controls (Always Visible on Mobile & Desktop) */}
+          <div className="flex items-center gap-1 sm:gap-2.5 shrink-0">
+            {/* Free Listing CTA Button */}
             <button
               onClick={() => router.push("/free-listing")}
-              className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-slate-950 font-black px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm flex items-center gap-1.5 shadow-md shadow-orange-500/20 hover:shadow-lg transition-all duration-200 whitespace-nowrap"
+              className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-slate-950 font-black px-2 sm:px-3.5 py-1.5 sm:py-2 rounded-xl text-[11px] sm:text-xs flex items-center gap-1 shadow-md shadow-orange-500/20 hover:shadow-lg transition-all duration-200 whitespace-nowrap"
             >
-              <PlusCircle size={16} />
-              <span className="hidden xs:inline">Free Listing</span>
-              <span className="xs:hidden">Add</span>
+              <PlusCircle size={14} />
+              <span className="hidden sm:inline">Free Listing</span>
+              <span className="sm:hidden font-bold">+ Add</span>
             </button>
 
-            {/* Bookmark Drawer Trigger */}
+            {/* Saved Bookmarks Button */}
             <button
               onClick={() => setShowBookmarks(true)}
-              className="relative p-2 sm:p-2.5 text-slate-300 hover:text-amber-400 hover:bg-slate-800 rounded-xl transition-colors"
+              className="relative p-1.5 sm:p-2.5 text-slate-300 hover:text-amber-400 hover:bg-slate-800 rounded-xl transition-colors shrink-0"
               aria-label="Saved businesses"
               title="Saved Businesses"
             >
-              <Heart size={20} />
+              <Heart size={18} className="sm:w-5 sm:h-5" />
               {bookmarkCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-rose-500 text-white text-[10px] font-black w-4 h-4 rounded-full flex items-center justify-center shadow animate-pulse">
+                <span className="absolute -top-1 -right-1 bg-rose-500 text-white text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center shadow animate-pulse">
                   {bookmarkCount}
                 </span>
               )}
             </button>
 
-            {/* Desktop Login Button */}
+            {/* Login / Sign Up Button (Prominently visible on Mobile too!) */}
             <button
               onClick={() => setShowLogin(true)}
-              className="hidden sm:flex items-center gap-1.5 bg-slate-900 hover:bg-slate-800 border border-slate-800 text-white font-bold px-4 py-2 rounded-xl text-xs sm:text-sm shadow-sm transition-all whitespace-nowrap"
+              className="bg-slate-900 hover:bg-slate-800 border border-slate-800 text-white font-bold px-2 sm:px-3.5 py-1.5 sm:py-2 rounded-xl text-[11px] sm:text-xs flex items-center gap-1 shadow-sm transition-all whitespace-nowrap"
             >
-              <User size={16} className="text-amber-400" />
-              <span>Login / Sign Up</span>
+              <User size={14} className="text-amber-400 shrink-0" />
+              <span className="hidden sm:inline">Login / Sign Up</span>
+              <span className="sm:hidden font-extrabold text-amber-400">Login</span>
+            </button>
+
+            {/* Mobile Menu Hamburger Toggle */}
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="lg:hidden p-1.5 sm:p-2 text-slate-300 hover:text-white rounded-xl bg-slate-900 border border-slate-800 shrink-0"
+              aria-label="Toggle Navigation Menu"
+            >
+              {mobileMenuOpen ? <X size={18} /> : <Menu size={18} />}
             </button>
           </div>
         </div>
 
-        {/* 🔹 Quick Category Nav Strip */}
+        {/* 🔹 Quick Category Nav Strip (Tablet/Desktop) */}
         <div className="bg-slate-950/80 border-t border-slate-800/80 px-4 sm:px-6 py-2 overflow-x-auto no-scrollbar hidden md:block">
           <div className="max-w-7xl mx-auto flex items-center gap-2.5">
             <span className="text-[11px] font-extrabold text-slate-500 uppercase tracking-wider shrink-0 mr-1">
@@ -250,7 +248,7 @@ export default function Navbar() {
 
       {/* 🔹 MOBILE SLIDE-OVER DRAWER MENU */}
       {mobileMenuOpen && (
-        <div className="fixed inset-0 z-50 md:hidden animate-in fade-in duration-200">
+        <div className="fixed inset-0 z-50 lg:hidden animate-in fade-in duration-200">
           <div
             className="absolute inset-0 bg-slate-950/80 backdrop-blur-md"
             onClick={() => setMobileMenuOpen(false)}
@@ -340,7 +338,7 @@ export default function Navbar() {
                 onClick={() => { setShowLogin(true); setMobileMenuOpen(false); }}
                 className="w-full bg-slate-800 hover:bg-slate-700 text-white font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-2"
               >
-                <User size={16} className="text-amber-400" />
+                <LogIn size={16} className="text-amber-400" />
                 <span>Login / Sign Up</span>
               </button>
             </div>
