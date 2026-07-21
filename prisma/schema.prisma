@@ -1,0 +1,152 @@
+// Prisma Schema for ApnaBiz
+// Database: PostgreSQL
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ============================================
+// EXISTING MODELS (Based on current codebase)
+// ============================================
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  phone     String?  @unique
+  password  String
+  name      String?
+  role      String   @default("user") // user, admin, business
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations for new features
+  reviews     Review[]
+  bookmarks   Bookmark[]
+  quoteRequests QuoteRequest[] @relation("CustomerQuotes")
+}
+
+model Business {
+  id          String   @id @default(cuid())
+  name        String
+  category    String
+  subCategory String?
+  description String?
+  phone       String?
+  email       String?
+  website     String?
+  
+  // Address
+  area        String?
+  district    String?
+  state       String?
+  pincode     String?
+  
+  // Verification
+  isVerified  Boolean  @default(false)
+  
+  // New fields for advanced features
+  operatingHours Json?  // {"monday": "09:00-21:00", "tuesday": "09:00-21:00", ...}
+  amenities       String[] // ["wifi", "ac", "parking", "cards", "home_delivery"]
+  photos          String[] // Array of photo URLs
+  locationLat     Float?
+  locationLng     Float?
+  averageRating   Float?   @default(0)
+  totalReviews    Int      @default(0)
+  priceLevel      Int?     @default(1) // 1-4: Budget to Premium
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations for new features
+  reviews       Review[]
+  bookmarks     Bookmark[]
+  quoteRequests QuoteRequest[] @relation("BusinessQuotes")
+}
+
+// ============================================
+// NEW MODELS FOR ADVANCED FEATURES
+// ============================================
+
+// Feature 1: Quote Requests
+model QuoteRequest {
+  id              String   @id @default(cuid())
+  businessId      String
+  customerId      String?
+  customerName    String
+  phone           String
+  email           String
+  requirements    String
+  preferredDate   DateTime
+  budget          String   // "1k-5k", "5k-10k", "10k-25k", "25k-50k", "50k+"
+  additionalNotes String?
+  status          String   @default("pending") // pending, responded, completed, cancelled
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  business Business @relation("BusinessQuotes", fields: [businessId], references: [id])
+  customer User?    @relation("CustomerQuotes", fields: [customerId], references: [id])
+}
+
+// Feature 3: Reviews & Ratings
+model Review {
+  id          String   @id @default(cuid())
+  businessId  String
+  userId      String
+  rating      Int      // 1-5
+  title       String
+  comment     String
+  photos      String[] // Optional photos
+  categories  Json?    // {"service": 5, "quality": 4, "value": 5}
+  isVerified  Boolean  @default(false)
+  helpfulVotes Int     @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  business Business @relation(fields: [businessId], references: [id])
+  user     User     @relation(fields: [userId], references: [id])
+
+  @@unique([businessId, userId]) // One review per user per business
+  @@index([businessId])
+  @@index([rating])
+}
+
+// Feature 4: Bookmarks
+model Bookmark {
+  id         String   @id @default(cuid())
+  userId     String
+  businessId String
+  createdAt  DateTime @default(now())
+
+  user     User     @relation(fields: [userId], references: [id])
+  business Business @relation(fields: [businessId], references: [id])
+
+  @@unique([userId, businessId])
+  @@index([userId])
+  @@index([businessId])
+}
+
+// ============================================
+// ENUMS
+// ============================================
+
+enum Amenity {
+  WIFI
+  AC
+  PARKING
+  CARDS_ACCEPTED
+  CASH_ON_DELIVERY
+  HOME_DELIVERY
+  OUTDOOR_SEATING
+  INDOOR_SEATING
+  KIDS_FRIENDLY
+  PET_FRIENDLY
+  WHEELCHAIR_ACCESSIBLE
+  FREE_WIFI
+  RESERVATIONS
+  TAKEOUT
+  DINE_IN
+}
