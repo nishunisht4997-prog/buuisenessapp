@@ -93,11 +93,6 @@ export default function ThreeWelcomeSplash() {
 
     animate();
 
-    // Auto dismiss after 3.8 seconds
-    const timer = setTimeout(() => {
-      handleClose();
-    }, 3800);
-
     // Handle Resize
     const handleResize = () => {
       if (!container) return;
@@ -111,7 +106,6 @@ export default function ThreeWelcomeSplash() {
     window.addEventListener("resize", handleResize);
 
     return () => {
-      clearTimeout(timer);
       cancelAnimationFrame(animationFrameId);
       window.removeEventListener("resize", handleResize);
       if (container && container.contains(renderer.domElement)) {
@@ -179,7 +173,7 @@ export default function ThreeWelcomeSplash() {
         {/* 🚀 Interactive "ENTER APNABIZ" Button */}
         <button
           onClick={handleClose}
-          className="bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-600 hover:to-orange-600 text-slate-950 font-black px-8 py-3.5 rounded-2xl text-sm sm:text-base flex items-center gap-2 shadow-2xl shadow-orange-500/30 hover:scale-105 transition-all duration-300 group cursor-pointer"
+          className="bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-600 hover:to-orange-600 text-slate-950 font-black px-8 py-3.5 rounded-2xl text-sm sm:text-base flex items-center gap-2 shadow-2xl shadow-orange-500/30 hover:scale-105 transition-all duration-300 group cursor-pointer animate-pulse"
         >
           <span>ENTER APNABIZ NOW</span>
           <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
