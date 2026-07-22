@@ -17,6 +17,7 @@ import {
   X,
   Bot,
   Download,
+  Flame,
   Utensils,
   Hotel,
   Sofa,
@@ -96,6 +97,12 @@ export default function Navbar() {
           </div>
 
           <div className="flex items-center gap-5">
+            <span
+              onClick={() => router.push("/hot-deals")}
+              className="flex items-center gap-1 text-amber-400 font-black cursor-pointer hover:text-amber-300 transition"
+            >
+              <Flame size={13} className="fill-amber-400 animate-pulse" /> Hot Deals & Offers
+            </span>
             <span
               onClick={() => setShowAiBot(true)}
               className="flex items-center gap-1 text-amber-400 font-black cursor-pointer hover:text-amber-300 transition"
@@ -188,6 +195,16 @@ export default function Navbar() {
           {/* RIGHT: Action Controls (Logo, +Add, Saved, Login, 3-Line Menu for Mobile) */}
           <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
             
+            {/* Hot Deals Button (Desktop/Tablet) */}
+            <button
+              onClick={() => router.push("/hot-deals")}
+              className="hidden lg:flex bg-gradient-to-r from-amber-500/10 to-orange-500/10 hover:bg-amber-500/20 border border-amber-500/40 text-amber-400 font-black px-3 py-2 rounded-xl text-xs items-center gap-1 shadow-sm transition-all whitespace-nowrap"
+              title="Hot Deals & Offers"
+            >
+              <Flame size={15} className="text-amber-400 fill-amber-400 animate-pulse shrink-0" />
+              <span>Hot Deals 🔥</span>
+            </button>
+
             {/* AI Bot Button (Desktop/Tablet) */}
             <button
               onClick={() => setShowAiBot(true)}
@@ -374,6 +391,15 @@ export default function Navbar() {
                 >
                   <User size={16} className="text-slate-950" />
                   <span>Login / Sign Up Now</span>
+                </button>
+
+                {/* Hot Deals & Flash Offers Link */}
+                <button
+                  onClick={() => { router.push("/hot-deals"); setMobileMenuOpen(false); }}
+                  className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-black text-amber-400 bg-amber-500/10 border border-amber-500/30"
+                >
+                  <Flame size={16} className="fill-amber-400" />
+                  <span>Hot Deals & Flash Offers 🔥</span>
                 </button>
 
                 {/* PWA App Install Button */}

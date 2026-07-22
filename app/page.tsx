@@ -11,6 +11,7 @@ import ThemeCustomizer from "./components/ThemeCustomizer";
 import Footer from "./components/Footer";
 import ThreeCityGlobe from "./components/ThreeCityGlobe";
 import ThreeIsometricCard from "./components/ThreeIsometricCard";
+import HotDealsSection from "./components/HotDealsSection";
 import { Sparkles, Building } from "lucide-react";
 
 export default function Home() {
@@ -36,6 +37,9 @@ export default function Home() {
 
       {/* 20 Gradient Category Cards */}
       <Categories />
+
+      {/* 🔹 🔥 Live Hot Deals & Flash Coupons Section */}
+      <HotDealsSection />
 
       {/* 🔹 3D Isometric Venues Showcase Grid */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 mt-12">
