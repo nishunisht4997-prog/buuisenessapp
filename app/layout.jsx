@@ -1,6 +1,7 @@
 import "./globals.css";
 import { ThemeProvider } from "./context/ThemeContext";
 import PWAInstallPrompt from "./components/PWAInstallPrompt";
+import ThreeWelcomeSplash from "./components/ThreeWelcomeSplash";
 
 export const metadata = {
   title: "ApnaBiz - India's #1 Local Search & Discovery Engine",
@@ -33,6 +34,7 @@ export default function RootLayout({ children }) {
       </head>
       <body className="antialiased selection:bg-amber-500 selection:text-slate-950 touch-manipulation overscroll-none overflow-x-hidden">
         <ThemeProvider>
+          <ThreeWelcomeSplash />
           <PWAInstallPrompt />
           {children}
         </ThemeProvider>
