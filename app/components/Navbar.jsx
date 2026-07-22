@@ -119,35 +119,35 @@ export default function Navbar() {
       <header className="w-full glass-nav sticky top-0 z-40 transition-all duration-200">
         <div className="max-w-7xl mx-auto px-2.5 sm:px-6 py-2 sm:py-3 flex items-center justify-between gap-1.5 sm:gap-4">
           
-          {/* LEFT: Logo & City Dropdown */}
-          <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
+          {/* LEFT: Logo (Mobile & Desktop) */}
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
             {/* Logo */}
             <div
               onClick={() => router.push("/")}
-              className="flex items-center gap-1 sm:gap-2 cursor-pointer group shrink-0"
+              className="flex items-center gap-1.5 sm:gap-2 cursor-pointer group shrink-0"
             >
               <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl bg-gradient-to-tr from-amber-500 via-orange-500 to-indigo-600 flex items-center justify-center text-white font-black text-sm sm:text-xl shadow-lg shadow-amber-500/20 group-hover:scale-105 transition-transform duration-300">
                 A
               </div>
-              <h1 className="text-sm sm:text-2xl font-black tracking-tight leading-none whitespace-nowrap">
+              <h1 className="text-base sm:text-2xl font-black tracking-tight leading-none whitespace-nowrap">
                 <span className="text-amber-500">Apna</span>
                 <span className="text-white">Biz</span>
               </h1>
             </div>
 
-            {/* City Dropdown Selector */}
-            <div className="relative shrink-0" ref={cityDropdownRef}>
+            {/* City Dropdown Selector (Desktop Only - Inline next to Logo) */}
+            <div className="relative shrink-0 hidden md:block" ref={cityDropdownRef}>
               <button
                 onClick={() => setShowCityDropdown(!showCityDropdown)}
-                className="flex items-center gap-1 bg-slate-900/90 hover:bg-slate-800 text-slate-200 text-[11px] sm:text-sm font-extrabold px-2 sm:px-3 py-1.5 sm:py-2 rounded-xl border border-slate-800 transition-colors shadow-sm"
+                className="flex items-center gap-1 bg-slate-900/90 hover:bg-slate-800 text-slate-200 text-xs sm:text-sm font-extrabold px-3 py-2 rounded-xl border border-slate-800 transition-colors shadow-sm"
               >
-                <MapPin size={12} className="text-amber-400 shrink-0" />
-                <span className="truncate max-w-[50px] xs:max-w-[70px] sm:max-w-[120px]">{selectedCity}</span>
-                <ChevronDown size={12} className={`text-slate-400 transition-transform duration-200 ${showCityDropdown ? "rotate-180" : ""}`} />
+                <MapPin size={13} className="text-amber-400 shrink-0" />
+                <span className="truncate max-w-[120px]">{selectedCity}</span>
+                <ChevronDown size={13} className={`text-slate-400 transition-transform duration-200 ${showCityDropdown ? "rotate-180" : ""}`} />
               </button>
 
               {showCityDropdown && (
-                <div className="absolute top-full left-0 mt-2 w-52 sm:w-60 bg-slate-900 rounded-2xl shadow-2xl border border-slate-800 p-2 sm:p-2.5 z-50 animate-in fade-in slide-in-from-top-2 duration-200 text-white">
+                <div className="absolute top-full left-0 mt-2 w-60 bg-slate-900 rounded-2xl shadow-2xl border border-slate-800 p-2.5 z-50 animate-in fade-in slide-in-from-top-2 duration-200 text-white">
                   <div className="text-[10px] font-extrabold text-slate-400 px-3 py-1 uppercase tracking-wider flex items-center justify-between">
                     <span>Select Location</span>
                     <span className="text-emerald-400 font-mono">GPS Active</span>
@@ -185,7 +185,7 @@ export default function Navbar() {
             </div>
           </div>
 
-          {/* RIGHT: Action Controls */}
+          {/* RIGHT: Action Controls (Logo, +Add, Saved, Login, 3-Line Menu for Mobile) */}
           <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
             
             {/* AI Bot Button (Desktop/Tablet) */}
@@ -198,7 +198,7 @@ export default function Navbar() {
               <span>AI Matchmaker</span>
             </button>
 
-            {/* Free Listing CTA Button */}
+            {/* ➕ FREE LISTING / ADD BUTTON (Visible on Mobile & Desktop) */}
             <button
               onClick={() => router.push("/free-listing")}
               className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-slate-950 font-black px-2 sm:px-3.5 py-1.5 sm:py-2 rounded-xl text-[11px] sm:text-xs flex items-center gap-1 shadow-md shadow-orange-500/20 hover:shadow-lg transition-all duration-200 whitespace-nowrap"
@@ -208,14 +208,14 @@ export default function Navbar() {
               <span className="sm:hidden font-bold">+ Add</span>
             </button>
 
-            {/* Saved Bookmarks Button */}
+            {/* ❤️ SAVED BOOKMARKS BUTTON (Visible on Mobile & Desktop) */}
             <button
               onClick={() => setShowBookmarks(true)}
               className="relative p-1.5 sm:p-2.5 text-slate-300 hover:text-amber-400 hover:bg-slate-800 rounded-xl transition-colors shrink-0"
               aria-label="Saved businesses"
               title="Saved Businesses"
             >
-              <Heart size={18} className="sm:w-5 sm:h-5" />
+              <Heart size={18} className="sm:w-5 sm:h-5 text-rose-400 sm:text-slate-300" />
               {bookmarkCount > 0 && (
                 <span className="absolute -top-1 -right-1 bg-rose-500 text-white text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center shadow animate-pulse">
                   {bookmarkCount}
@@ -223,7 +223,7 @@ export default function Navbar() {
               )}
             </button>
 
-            {/* 🔑 LOGIN / SIGN UP BUTTON */}
+            {/* 🔑 LOGIN / SIGN UP BUTTON (Visible on Mobile & Desktop) */}
             <button
               onClick={() => setShowLogin(true)}
               className="bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-600 hover:to-orange-600 text-slate-950 font-black px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-xl text-[11px] sm:text-xs flex items-center gap-1 shadow-lg shadow-orange-500/20 transition-all whitespace-nowrap shrink-0"
@@ -233,14 +233,84 @@ export default function Navbar() {
               <span className="sm:hidden font-extrabold">Login</span>
             </button>
 
-            {/* Mobile Menu Hamburger Toggle */}
+            {/* ☰ 3-LINE HAMBURGER MENU TOGGLE BUTTON (Visible on Mobile & Tablet) */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="lg:hidden p-1.5 sm:p-2 text-slate-300 hover:text-white rounded-xl bg-slate-900 border border-slate-800 shrink-0"
               aria-label="Toggle Navigation Menu"
+              title="Menu"
             >
               {mobileMenuOpen ? <X size={18} /> : <Menu size={18} />}
             </button>
+          </div>
+        </div>
+
+        {/* 📍 MOBILE LOCATION BAR STRIP (Positioned Below Main Navbar on Mobile) */}
+        <div className="md:hidden bg-slate-950/95 border-t border-slate-800/80 px-3 py-1.5 flex items-center justify-between gap-2 overflow-x-auto no-scrollbar">
+          <div className="relative shrink-0" ref={cityDropdownRef}>
+            <button
+              onClick={() => setShowCityDropdown(!showCityDropdown)}
+              className="flex items-center gap-1 bg-slate-900/90 hover:bg-slate-800 text-slate-200 text-xs font-extrabold px-2.5 py-1 rounded-xl border border-slate-800 transition-colors shadow-sm"
+            >
+              <MapPin size={13} className="text-amber-400 shrink-0" />
+              <span>Location:</span>
+              <span className="text-amber-400 font-black">{selectedCity}</span>
+              <ChevronDown size={13} className={`text-slate-400 transition-transform duration-200 ${showCityDropdown ? "rotate-180" : ""}`} />
+            </button>
+
+            {showCityDropdown && (
+              <div className="absolute top-full left-0 mt-2 w-56 bg-slate-900 rounded-2xl shadow-2xl border border-slate-800 p-2.5 z-50 text-white animate-in fade-in slide-in-from-top-2 duration-200">
+                <div className="text-[10px] font-extrabold text-slate-400 px-2 py-1 uppercase tracking-wider flex items-center justify-between">
+                  <span>Select Location</span>
+                  <span className="text-emerald-400 font-mono">GPS Active</span>
+                </div>
+                <div className="max-h-56 overflow-y-auto space-y-0.5 mt-1">
+                  {CITIES.map((city) => (
+                    <button
+                      key={city.name}
+                      onClick={() => {
+                        setSelectedCity(city.name);
+                        setShowCityDropdown(false);
+                      }}
+                      className={`w-full flex items-center justify-between text-left px-3 py-2 text-xs rounded-xl transition-colors ${
+                        selectedCity === city.name
+                          ? "bg-amber-500 text-slate-950 font-black"
+                          : "text-slate-200 hover:bg-slate-800 font-semibold"
+                      }`}
+                    >
+                      <span className="flex items-center gap-2">
+                        <MapPin size={12} className={selectedCity === city.name ? "text-slate-950" : "text-slate-400"} />
+                        {city.name}
+                      </span>
+                      {city.popular && (
+                        <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded ${
+                          selectedCity === city.name ? "bg-slate-950 text-amber-400" : "bg-slate-800 text-amber-400"
+                        }`}>
+                          Popular
+                        </span>
+                      )}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Quick Popular City Pills */}
+          <div className="flex items-center gap-1.5 shrink-0">
+            {CITIES.slice(0, 3).map((c) => (
+              <button
+                key={c.short}
+                onClick={() => setSelectedCity(c.name)}
+                className={`text-[10px] font-extrabold px-2 py-0.5 rounded-lg transition-colors ${
+                  selectedCity === c.name
+                    ? "bg-amber-500 text-slate-950"
+                    : "bg-slate-900 text-slate-400 border border-slate-800"
+                }`}
+              >
+                {c.short}
+              </button>
+            ))}
           </div>
         </div>
 
