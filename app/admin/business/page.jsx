@@ -1,18 +1,22 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   Building2,
   Phone,
   CheckCircle2,
   Clock,
   Search,
-  Filter,
   ShieldCheck,
-  UserCheck
+  UserCheck,
+  Edit,
+  MapPin,
+  Tag
 } from "lucide-react";
 
 export default function AdminBusinessPage() {
+  const router = useRouter();
   const [businesses, setBusinesses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filterTab, setFilterTab] = useState("ALL");
@@ -68,22 +72,22 @@ export default function AdminBusinessPage() {
   });
 
   return (
-    <div className="space-y-6 max-w-7xl mx-auto">
+    <div className="space-y-6 max-w-7xl mx-auto pb-12">
       {/* Header Banner */}
-      <div className="bg-gradient-to-r from-slate-900 via-slate-950 to-indigo-950 border border-slate-800 p-6 rounded-3xl shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+      <div className="bg-slate-900 border border-slate-800 p-6 rounded-3xl shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight flex items-center gap-2">
             <Building2 size={24} className="text-emerald-400" />
-            <span>Business Verification Queue</span>
+            <span>Business Listings & Edit Control</span>
           </h1>
           <p className="text-slate-400 text-xs sm:text-sm mt-1 font-medium">
-            Review and approve pending merchant listings to publish them live on ApnaBiz directory.
+            Review, edit business details (Name, Phone, Category, Location, Image), and approve merchant listings.
           </p>
         </div>
 
-        <div className="flex items-center gap-2 bg-slate-900 border border-slate-800 px-3 py-1.5 rounded-xl text-xs text-emerald-400 font-bold">
+        <div className="flex items-center gap-2 bg-slate-950 border border-slate-800 px-3 py-1.5 rounded-xl text-xs text-emerald-400 font-bold">
           <ShieldCheck size={16} />
-          <span>{businesses.length} Total Registered</span>
+          <span>{businesses.length} Total Listings</span>
         </div>
       </div>
 
@@ -129,9 +133,9 @@ export default function AdminBusinessPage() {
               <thead>
                 <tr className="border-b border-slate-800 text-xs font-bold text-slate-400 uppercase tracking-wider">
                   <th className="py-3.5 px-4">Business Name</th>
-                  <th className="py-3.5 px-4">Phone Number</th>
+                  <th className="py-3.5 px-4">Contact Phone</th>
                   <th className="py-3.5 px-4">Status</th>
-                  <th className="py-3.5 px-4 text-right">Action</th>
+                  <th className="py-3.5 px-4 text-right">Actions</th>
                 </tr>
               </thead>
 
@@ -141,10 +145,17 @@ export default function AdminBusinessPage() {
                   return (
                     <tr key={business.id} className="hover:bg-slate-800/40 transition-colors">
                       <td className="py-4 px-4 font-bold text-white flex items-center gap-2.5">
-                        <div className="w-9 h-9 rounded-xl bg-slate-800 border border-slate-700 text-indigo-400 font-black flex items-center justify-center shrink-0 text-sm">
-                          {business.name?.charAt(0) || "B"}
+                        <div className="w-9 h-9 rounded-xl bg-slate-800 border border-slate-700 text-indigo-400 font-black flex items-center justify-center shrink-0 text-sm overflow-hidden">
+                          {business.storeImage ? (
+                            <img src={business.storeImage} alt="" className="w-full h-full object-cover" />
+                          ) : (
+                            business.name?.charAt(0) || "B"
+                          )}
                         </div>
-                        <span>{business.name}</span>
+                        <div>
+                          <span className="block font-black text-white">{business.name}</span>
+                          <span className="text-[10px] text-slate-400 font-mono">{business.businessCode || business.id?.slice(0, 8)}</span>
+                        </div>
                       </td>
 
                       <td className="py-4 px-4 text-slate-300 font-medium">
@@ -161,22 +172,29 @@ export default function AdminBusinessPage() {
                           </span>
                         ) : (
                           <span className="bg-amber-500/20 text-amber-400 border border-amber-500/30 text-[11px] font-extrabold px-2.5 py-1 rounded-full uppercase tracking-wider inline-flex items-center gap-1">
-                            <Clock size={12} /> Pending Review
+                            <Clock size={12} /> Pending
                           </span>
                         )}
                       </td>
 
                       <td className="py-4 px-4 text-right">
-                        {!isApproved ? (
+                        <div className="flex items-center justify-end gap-2">
                           <button
-                            onClick={() => approveBusiness(business.id)}
-                            className="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-black px-4 py-1.5 rounded-xl text-xs shadow-md transition-all inline-flex items-center gap-1"
+                            onClick={() => router.push(`/admin/business/${business.id}`)}
+                            className="bg-slate-800 hover:bg-slate-700 text-amber-400 font-extrabold px-3 py-1.5 rounded-xl text-xs border border-slate-700 transition-colors inline-flex items-center gap-1"
                           >
-                            <UserCheck size={14} /> Approve Now
+                            <Edit size={13} /> Edit
                           </button>
-                        ) : (
-                          <span className="text-slate-500 font-semibold text-xs">Verified ✓</span>
-                        )}
+
+                          {!isApproved && (
+                            <button
+                              onClick={() => approveBusiness(business.id)}
+                              className="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-black px-3 py-1.5 rounded-xl text-xs shadow-md transition-all inline-flex items-center gap-1"
+                            >
+                              <UserCheck size={13} /> Approve
+                            </button>
+                          )}
+                        </div>
                       </td>
                     </tr>
                   );
@@ -185,7 +203,7 @@ export default function AdminBusinessPage() {
                 {filtered.length === 0 && (
                   <tr>
                     <td colSpan="4" className="text-center py-12 text-slate-500 font-medium">
-                      No business listings found in this queue.
+                      No business listings found matching criteria.
                     </td>
                   </tr>
                 )}
