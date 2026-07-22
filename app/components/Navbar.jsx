@@ -116,7 +116,7 @@ export default function Navbar() {
 
       {/* 🔹 Main Glassmorphic Navbar */}
       <header className="w-full glass-nav sticky top-0 z-40 transition-all duration-200">
-        <div className="max-w-7xl mx-auto px-2 sm:px-6 py-2 sm:py-3 flex items-center justify-between gap-1.5 sm:gap-4">
+        <div className="max-w-7xl mx-auto px-2.5 sm:px-6 py-2 sm:py-3 flex items-center justify-between gap-1.5 sm:gap-4">
           
           {/* LEFT: Logo & City Dropdown */}
           <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
@@ -141,7 +141,7 @@ export default function Navbar() {
                 className="flex items-center gap-1 bg-slate-900/90 hover:bg-slate-800 text-slate-200 text-[11px] sm:text-sm font-extrabold px-2 sm:px-3 py-1.5 sm:py-2 rounded-xl border border-slate-800 transition-colors shadow-sm"
               >
                 <MapPin size={12} className="text-amber-400 shrink-0" />
-                <span className="truncate max-w-[55px] sm:max-w-[120px]">{selectedCity}</span>
+                <span className="truncate max-w-[50px] xs:max-w-[70px] sm:max-w-[120px]">{selectedCity}</span>
                 <ChevronDown size={12} className={`text-slate-400 transition-transform duration-200 ${showCityDropdown ? "rotate-180" : ""}`} />
               </button>
 
@@ -184,17 +184,17 @@ export default function Navbar() {
             </div>
           </div>
 
-          {/* RIGHT: Action Controls */}
-          <div className="flex items-center gap-1 sm:gap-2.5 shrink-0">
-            {/* AI Smart Bot Trigger Button */}
+          {/* RIGHT: Action Controls (Optimized for Mobile & Desktop) */}
+          <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
+            
+            {/* AI Bot Button (Desktop/Tablet) */}
             <button
               onClick={() => setShowAiBot(true)}
-              className="bg-slate-900 hover:bg-slate-800 border border-amber-500/40 text-amber-400 font-black px-2 sm:px-3 py-1.5 sm:py-2 rounded-xl text-[11px] sm:text-xs flex items-center gap-1 shadow-sm transition-all whitespace-nowrap"
+              className="hidden md:flex bg-slate-900 hover:bg-slate-800 border border-amber-500/40 text-amber-400 font-black px-3 py-2 rounded-xl text-xs items-center gap-1 shadow-sm transition-all whitespace-nowrap"
               title="AI Smart Matchmaker"
             >
               <Bot size={15} className="text-amber-400 shrink-0" />
-              <span className="hidden sm:inline">AI Matchmaker</span>
-              <span className="sm:hidden font-bold">AI Bot</span>
+              <span>AI Matchmaker</span>
             </button>
 
             {/* Free Listing CTA Button */}
@@ -222,14 +222,14 @@ export default function Navbar() {
               )}
             </button>
 
-            {/* Login / Sign Up Button */}
+            {/* 🔑 LOGIN / SIGN UP BUTTON (Guaranteed Visible on All Mobile Screens) */}
             <button
               onClick={() => setShowLogin(true)}
-              className="bg-slate-900 hover:bg-slate-800 border border-slate-800 text-white font-bold px-2 sm:px-3.5 py-1.5 sm:py-2 rounded-xl text-[11px] sm:text-xs flex items-center gap-1 shadow-sm transition-all whitespace-nowrap"
+              className="bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-600 hover:to-orange-600 text-slate-950 font-black px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-xl text-[11px] sm:text-xs flex items-center gap-1 shadow-lg shadow-orange-500/20 transition-all whitespace-nowrap shrink-0"
             >
-              <User size={14} className="text-amber-400 shrink-0" />
+              <User size={14} className="text-slate-950 shrink-0" />
               <span className="hidden sm:inline">Login / Sign Up</span>
-              <span className="sm:hidden font-extrabold text-amber-400">Login</span>
+              <span className="sm:hidden font-extrabold">Login</span>
             </button>
 
             {/* Mobile Menu Hamburger Toggle */}
@@ -296,9 +296,18 @@ export default function Navbar() {
 
               {/* Navigation Links List */}
               <div className="space-y-2">
+                {/* Highlighted Login / Sign Up Button inside Drawer */}
+                <button
+                  onClick={() => { setShowLogin(true); setMobileMenuOpen(false); }}
+                  className="w-full flex items-center justify-center gap-2 px-3.5 py-3 rounded-xl text-xs font-black text-slate-950 bg-gradient-to-r from-amber-500 to-orange-500 shadow-lg"
+                >
+                  <User size={16} className="text-slate-950" />
+                  <span>Login / Sign Up Now</span>
+                </button>
+
                 <button
                   onClick={() => { setShowAiBot(true); setMobileMenuOpen(false); }}
-                  className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-black text-amber-400 bg-amber-500/10 border border-amber-500/20"
+                  className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-black text-amber-400 bg-slate-950 border border-slate-800"
                 >
                   <Bot size={16} />
                   <span>AI Smart Matchmaker Chatbot</span>
