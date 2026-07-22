@@ -15,6 +15,7 @@ import {
   Building2,
   Menu,
   X,
+  Bot,
   Utensils,
   Hotel,
   Sofa,
@@ -28,6 +29,7 @@ import {
 } from "lucide-react";
 import LoginPopup from "./LoginPopup";
 import SavedBusinessesDrawer from "./SavedBusinessesDrawer";
+import AIChatbotModal from "./AIChatbotModal";
 
 const CITIES = [
   { name: "Bhubaneswar", short: "BBSR", state: "Odisha", popular: true },
@@ -55,6 +57,7 @@ export default function Navbar() {
   const router = useRouter();
   const [showLogin, setShowLogin] = useState(false);
   const [showBookmarks, setShowBookmarks] = useState(false);
+  const [showAiBot, setShowAiBot] = useState(false);
   const [bookmarkCount, setBookmarkCount] = useState(0);
   const [selectedCity, setSelectedCity] = useState("Bhubaneswar");
   const [showCityDropdown, setShowCityDropdown] = useState(false);
@@ -92,6 +95,12 @@ export default function Navbar() {
           </div>
 
           <div className="flex items-center gap-5">
+            <span
+              onClick={() => setShowAiBot(true)}
+              className="flex items-center gap-1 text-amber-400 font-black cursor-pointer hover:text-amber-300 transition"
+            >
+              <Bot size={13} /> AI Smart Matchmaker
+            </span>
             <span className="flex items-center gap-1 hover:text-white cursor-pointer transition font-medium">
               <Globe size={13} /> EN / हिंदी / ଓଡ଼ିଆ
             </span>
@@ -175,8 +184,19 @@ export default function Navbar() {
             </div>
           </div>
 
-          {/* RIGHT: Action Controls (Always Visible on Mobile & Desktop) */}
+          {/* RIGHT: Action Controls */}
           <div className="flex items-center gap-1 sm:gap-2.5 shrink-0">
+            {/* AI Smart Bot Trigger Button */}
+            <button
+              onClick={() => setShowAiBot(true)}
+              className="bg-slate-900 hover:bg-slate-800 border border-amber-500/40 text-amber-400 font-black px-2 sm:px-3 py-1.5 sm:py-2 rounded-xl text-[11px] sm:text-xs flex items-center gap-1 shadow-sm transition-all whitespace-nowrap"
+              title="AI Smart Matchmaker"
+            >
+              <Bot size={15} className="text-amber-400 shrink-0" />
+              <span className="hidden sm:inline">AI Matchmaker</span>
+              <span className="sm:hidden font-bold">AI Bot</span>
+            </button>
+
             {/* Free Listing CTA Button */}
             <button
               onClick={() => router.push("/free-listing")}
@@ -202,7 +222,7 @@ export default function Navbar() {
               )}
             </button>
 
-            {/* Login / Sign Up Button (Prominently visible on Mobile too!) */}
+            {/* Login / Sign Up Button */}
             <button
               onClick={() => setShowLogin(true)}
               className="bg-slate-900 hover:bg-slate-800 border border-slate-800 text-white font-bold px-2 sm:px-3.5 py-1.5 sm:py-2 rounded-xl text-[11px] sm:text-xs flex items-center gap-1 shadow-sm transition-all whitespace-nowrap"
@@ -277,6 +297,14 @@ export default function Navbar() {
               {/* Navigation Links List */}
               <div className="space-y-2">
                 <button
+                  onClick={() => { setShowAiBot(true); setMobileMenuOpen(false); }}
+                  className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-black text-amber-400 bg-amber-500/10 border border-amber-500/20"
+                >
+                  <Bot size={16} />
+                  <span>AI Smart Matchmaker Chatbot</span>
+                </button>
+
+                <button
                   onClick={() => { router.push("/"); setMobileMenuOpen(false); }}
                   className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold text-slate-200 hover:bg-slate-800"
                 >
@@ -286,9 +314,9 @@ export default function Navbar() {
 
                 <button
                   onClick={() => { router.push("/free-listing"); setMobileMenuOpen(false); }}
-                  className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold text-amber-400 bg-amber-500/10 border border-amber-500/20"
+                  className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold text-slate-200 hover:bg-slate-800"
                 >
-                  <PlusCircle size={16} />
+                  <PlusCircle size={16} className="text-amber-400" />
                   <span>Free Business Listing</span>
                 </button>
 
@@ -351,6 +379,9 @@ export default function Navbar() {
 
       {/* ✅ SAVED BUSINESSES DRAWER */}
       {showBookmarks && <SavedBusinessesDrawer isOpen={showBookmarks} onClose={() => setShowBookmarks(false)} />}
+
+      {/* ✅ AI SMART MATCHMAKER CHATBOT */}
+      {showAiBot && <AIChatbotModal isOpen={showAiBot} onClose={() => setShowAiBot(false)} />}
     </>
   );
 }

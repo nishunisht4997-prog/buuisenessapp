@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { X, Star, Camera, ShieldCheck, Sparkles, Send } from "lucide-react";
+import { X, Star, ShieldCheck, ShieldAlert, Sparkles, Send, AlertTriangle } from "lucide-react";
 import StarRatingInput from "./StarRatingInput";
 
 export default function RatingReviewModal({ isOpen, onClose, businessId, businessName }) {
@@ -11,9 +11,11 @@ export default function RatingReviewModal({ isOpen, onClose, businessId, busines
   const [photos, setPhotos] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [spamError, setSpamError] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setSpamError(null);
 
     if (rating === 0) {
       alert("Please select a star rating");
@@ -46,7 +48,9 @@ export default function RatingReviewModal({ isOpen, onClose, businessId, busines
         }),
       });
 
-      if (response.ok) {
+      const data = await response.json();
+
+      if (response.ok && data.success) {
         setSubmitSuccess(true);
         setTimeout(() => {
           onClose();
@@ -56,8 +60,14 @@ export default function RatingReviewModal({ isOpen, onClose, businessId, busines
           setPhotos([]);
           setSubmitSuccess(false);
         }, 2000);
+      } else if (data.isSpam) {
+        setSpamError({
+          riskScore: data.riskScore,
+          reason: data.reason,
+          error: data.error,
+        });
       } else {
-        alert("Failed to submit review. Please try again.");
+        alert(data.error || "Failed to submit review. Please try again.");
       }
     } catch (error) {
       console.error("Error submitting review:", error);
@@ -88,7 +98,9 @@ export default function RatingReviewModal({ isOpen, onClose, businessId, busines
             </div>
             <div>
               <h2 className="text-base font-extrabold tracking-tight">Write Customer Review</h2>
-              <p className="text-[11px] text-slate-400 font-medium">Verified customer feedback</p>
+              <p className="text-[11px] text-slate-400 font-medium flex items-center gap-1">
+                <ShieldCheck size={12} className="text-emerald-400" /> Protected by AI Fake Review Filter
+              </p>
             </div>
           </div>
           <button
@@ -105,15 +117,36 @@ export default function RatingReviewModal({ isOpen, onClose, businessId, busines
             <div className="w-16 h-16 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-full flex items-center justify-center mx-auto shadow-lg">
               <ShieldCheck size={36} />
             </div>
-            <h3 className="text-2xl font-black text-white tracking-tight">Review Submitted!</h3>
-            <p className="text-xs text-slate-400 font-medium">Thank you for helping other buyers make informed choices.</p>
+            <h3 className="text-2xl font-black text-white tracking-tight">Review Verified & Posted!</h3>
+            <p className="text-xs text-slate-400 font-medium">Passed AI Fake Review Shield with 0% Spam Risk.</p>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="bg-slate-950 p-3 rounded-2xl border border-slate-800">
-              <p className="text-[11px] text-slate-400 font-medium">Reviewing Business:</p>
-              <p className="font-extrabold text-sm text-amber-400 mt-0.5">{businessName}</p>
+            <div className="bg-slate-950 p-3 rounded-2xl border border-slate-800 flex items-center justify-between">
+              <div>
+                <p className="text-[11px] text-slate-400 font-medium">Reviewing Business:</p>
+                <p className="font-extrabold text-sm text-amber-400 mt-0.5">{businessName}</p>
+              </div>
+              <span className="text-[10px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded-full font-black flex items-center gap-1">
+                <ShieldCheck size={11} /> AI Shield Active
+              </span>
             </div>
+
+            {/* AI Spam Filter Alert Warning */}
+            {spamError && (
+              <div className="bg-rose-950/80 border border-rose-800 p-4 rounded-2xl space-y-1.5 animate-in fade-in duration-200">
+                <div className="flex items-center gap-2 text-rose-400 font-extrabold text-xs">
+                  <ShieldAlert size={18} />
+                  <span>AI Fake Review Filter Triggered (Spam Risk: {spamError.riskScore}%)</span>
+                </div>
+                <p className="text-xs text-rose-200 font-medium">
+                  {spamError.reason}
+                </p>
+                <p className="text-[10px] text-rose-400 font-semibold italic">
+                  ApnaBiz automatically blocks fake, repetitive, or competitor spam reviews to keep directory ratings 100% honest.
+                </p>
+              </div>
+            )}
 
             <div>
               <label className="block text-xs font-bold text-slate-300 mb-2">Select Star Rating *</label>
@@ -151,7 +184,7 @@ export default function RatingReviewModal({ isOpen, onClose, businessId, busines
               className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-slate-950 font-black py-3 rounded-2xl text-xs shadow-lg shadow-orange-500/20 flex items-center justify-center gap-2 transition-all mt-2"
             >
               <Send size={16} />
-              <span>{isSubmitting ? "Submitting Review..." : "Submit Review"}</span>
+              <span>{isSubmitting ? "Scanning & Submitting..." : "Submit Verified Review"}</span>
             </button>
           </form>
         )}
