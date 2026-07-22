@@ -1,0 +1,49 @@
+{
+  "name": "ApnaBiz - Local Search & Discovery Engine",
+  "short_name": "ApnaBiz",
+  "description": "Find 4.9 Cr+ verified local businesses, restaurants, hotels, doctors, and services in Odisha & India with instant WhatsApp quotes.",
+  "start_url": "/",
+  "id": "/",
+  "display": "standalone",
+  "background_color": "#090d16",
+  "theme_color": "#090d16",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Free Business Listing",
+      "short_name": "Free Listing",
+      "description": "List your local store or service for free",
+      "url": "/free-listing",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Merchant Portal",
+      "short_name": "Merchant",
+      "description": "Access your merchant lead dashboard",
+      "url": "/business/dashboard",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    }
+  ],
+  "categories": ["business", "lifestyle", "utilities", "shopping"]
+}

@@ -16,6 +16,7 @@ import {
   Menu,
   X,
   Bot,
+  Download,
   Utensils,
   Hotel,
   Sofa,
@@ -184,7 +185,7 @@ export default function Navbar() {
             </div>
           </div>
 
-          {/* RIGHT: Action Controls (Optimized for Mobile & Desktop) */}
+          {/* RIGHT: Action Controls */}
           <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
             
             {/* AI Bot Button (Desktop/Tablet) */}
@@ -222,7 +223,7 @@ export default function Navbar() {
               )}
             </button>
 
-            {/* 🔑 LOGIN / SIGN UP BUTTON (Guaranteed Visible on All Mobile Screens) */}
+            {/* 🔑 LOGIN / SIGN UP BUTTON */}
             <button
               onClick={() => setShowLogin(true)}
               className="bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-600 hover:to-orange-600 text-slate-950 font-black px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-xl text-[11px] sm:text-xs flex items-center gap-1 shadow-lg shadow-orange-500/20 transition-all whitespace-nowrap shrink-0"
@@ -303,6 +304,22 @@ export default function Navbar() {
                 >
                   <User size={16} className="text-slate-950" />
                   <span>Login / Sign Up Now</span>
+                </button>
+
+                {/* PWA App Install Button */}
+                <button
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    if (window.deferredPWAInstall) {
+                      window.deferredPWAInstall();
+                    } else {
+                      alert("To install ApnaBiz PWA App:\n1. Tap your browser menu (3 dots or share icon)\n2. Select 'Add to Home Screen' or 'Install App'");
+                    }
+                  }}
+                  className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-black text-emerald-400 bg-emerald-500/10 border border-emerald-500/20"
+                >
+                  <Download size={16} />
+                  <span>Install ApnaBiz App 📲</span>
                 </button>
 
                 <button
