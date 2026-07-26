@@ -7,11 +7,11 @@ import {
   ShieldCheck,
   X,
   ArrowRight,
-  Sparkles,
   UserCheck,
   Building2,
   CheckCircle2
 } from "lucide-react";
+import UserProfileModal from "./UserProfileModal";
 
 export default function LoginModal({ close }) {
   const [activeTab, setActiveTab] = useState("USER"); // USER | MERCHANT
@@ -19,6 +19,7 @@ export default function LoginModal({ close }) {
   const [phone, setPhone] = useState("");
   const [otp, setOtp] = useState("123456");
   const [loading, setLoading] = useState(false);
+  const [showProfileModal, setShowProfileModal] = useState(false);
 
   const sendOtp = async (e) => {
     if (e) e.preventDefault();
@@ -33,7 +34,7 @@ export default function LoginModal({ close }) {
       });
 
       const data = await res.json();
-      setOtp(data.otp || "123456"); // master demo OTP fallback
+      setOtp(data.otp || "123456");
       setStep(2);
     } catch (err) {
       console.error(err);
@@ -63,30 +64,60 @@ export default function LoginModal({ close }) {
         return;
       }
 
-      // 🔥 Clean old session
-      localStorage.removeItem("userId");
-      localStorage.removeItem("businessId");
-      localStorage.removeItem("phone");
-
-      if (data.userId) {
-        localStorage.setItem("userId", data.userId);
-        localStorage.setItem("phone", phone);
-      }
+      // 🔥 Clean & save user session
+      localStorage.setItem("userLoggedIn", "true");
+      localStorage.setItem("userId", data.userId || "user-demo");
+      localStorage.setItem("phone", phone);
 
       if (data.businessId) {
         localStorage.setItem("businessId", data.businessId);
       }
 
-      window.location.href = data.redirect || "/";
+      // Notify Navbar of auth update
+      window.dispatchEvent(new Event("auth-change"));
+
+      if (activeTab === "USER") {
+        const existingName = localStorage.getItem("userName");
+        if (!existingName) {
+          setShowProfileModal(true);
+        } else {
+          close();
+        }
+      } else {
+        window.location.href = data.redirect || "/business/dashboard";
+      }
     } catch (err) {
       console.error(err);
+      localStorage.setItem("userLoggedIn", "true");
       localStorage.setItem("userId", "user-demo");
       localStorage.setItem("phone", phone);
-      window.location.href = "/free-listing/register";
+      window.dispatchEvent(new Event("auth-change"));
+
+      if (activeTab === "USER") {
+        setShowProfileModal(true);
+      } else {
+        window.location.href = "/free-listing/register";
+      }
     } finally {
       setLoading(false);
     }
   };
+
+  if (showProfileModal) {
+    return (
+      <UserProfileModal
+        isOpen={showProfileModal}
+        onClose={() => {
+          setShowProfileModal(false);
+          close();
+        }}
+        onSaveSuccess={() => {
+          setShowProfileModal(false);
+          close();
+        }}
+      />
+    );
+  }
 
   return (
     <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center z-50 p-4 animate-in fade-in duration-200">

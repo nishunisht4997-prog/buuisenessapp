@@ -27,11 +27,15 @@ import {
   Dumbbell,
   Package,
   Home,
-  LogIn
+  LogIn,
+  UserCheck,
+  Edit,
+  LogOut
 } from "lucide-react";
 import LoginPopup from "./LoginPopup";
 import SavedBusinessesDrawer from "./SavedBusinessesDrawer";
 import AIChatbotModal from "./AIChatbotModal";
+import UserProfileModal from "./UserProfileModal";
 
 const CITIES = [
   { name: "Bhubaneswar", short: "BBSR", state: "Odisha", popular: true },
@@ -60,24 +64,76 @@ export default function Navbar() {
   const [showLogin, setShowLogin] = useState(false);
   const [showBookmarks, setShowBookmarks] = useState(false);
   const [showAiBot, setShowAiBot] = useState(false);
+  const [showUserProfileModal, setShowUserProfileModal] = useState(false);
   const [bookmarkCount, setBookmarkCount] = useState(0);
   const [selectedCity, setSelectedCity] = useState("Bhubaneswar");
   const [showCityDropdown, setShowCityDropdown] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  
+  // User Auth State
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
+  const [userName, setUserName] = useState("");
+  const [userPhone, setUserPhone] = useState("");
+  const [showUserDropdown, setShowUserDropdown] = useState(false);
+
   const cityDropdownRef = useRef(null);
+  const userDropdownRef = useRef(null);
+
+  const checkAuth = () => {
+    const userId = localStorage.getItem("userId");
+    const userLoggedIn = localStorage.getItem("userLoggedIn");
+    const name = localStorage.getItem("userName") || "";
+    const phone = localStorage.getItem("phone") || "";
+
+    if (userId || userLoggedIn === "true") {
+      setIsUserLoggedIn(true);
+      setUserName(name);
+      setUserPhone(phone);
+    } else {
+      setIsUserLoggedIn(false);
+      setUserName("");
+      setUserPhone("");
+    }
+  };
 
   useEffect(() => {
+    checkAuth();
     const bookmarks = JSON.parse(localStorage.getItem("bookmarks") || "[]");
     setBookmarkCount(bookmarks.length);
+
+    const handleAuthChange = () => checkAuth();
+    window.addEventListener("auth-change", handleAuthChange);
 
     const handleClickOutside = (event) => {
       if (cityDropdownRef.current && !cityDropdownRef.current.contains(event.target)) {
         setShowCityDropdown(false);
       }
+      if (userDropdownRef.current && !userDropdownRef.current.contains(event.target)) {
+        setShowUserDropdown(false);
+      }
     };
     document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      window.removeEventListener("auth-change", handleAuthChange);
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
   }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("userId");
+    localStorage.removeItem("userLoggedIn");
+    localStorage.removeItem("userName");
+    localStorage.removeItem("userEmail");
+    localStorage.removeItem("userCity");
+    localStorage.removeItem("phone");
+    localStorage.removeItem("businessId");
+
+    setIsUserLoggedIn(false);
+    setShowUserDropdown(false);
+    window.dispatchEvent(new Event("auth-change"));
+    router.push("/");
+  };
 
   return (
     <>
@@ -192,7 +248,7 @@ export default function Navbar() {
             </div>
           </div>
 
-          {/* RIGHT: Action Controls (Logo, +Add, Saved, Login, 3-Line Menu for Mobile) */}
+          {/* RIGHT: Action Controls (Logo, +Add, Saved, Login / Logged In User Status, 3-Line Menu for Mobile) */}
           <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
             
             {/* Hot Deals Button (Desktop/Tablet) */}
@@ -240,15 +296,83 @@ export default function Navbar() {
               )}
             </button>
 
-            {/* 🔑 LOGIN / SIGN UP BUTTON (Visible on Mobile & Desktop) */}
-            <button
-              onClick={() => setShowLogin(true)}
-              className="bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-600 hover:to-orange-600 text-slate-950 font-black px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-xl text-[11px] sm:text-xs flex items-center gap-1 shadow-lg shadow-orange-500/20 transition-all whitespace-nowrap shrink-0"
-            >
-              <User size={14} className="text-slate-950 shrink-0" />
-              <span className="hidden sm:inline">Login / Sign Up</span>
-              <span className="sm:hidden font-extrabold">Login</span>
-            </button>
+            {/* 👤 LOGGED IN USER BADGE OR LOGIN BUTTON */}
+            {isUserLoggedIn ? (
+              <div className="relative shrink-0" ref={userDropdownRef}>
+                <button
+                  onClick={() => setShowUserDropdown(!showUserDropdown)}
+                  className="bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 border border-emerald-500/40 font-black px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-xl text-[11px] sm:text-xs flex items-center gap-1.5 shadow-lg shadow-emerald-500/10 transition-all whitespace-nowrap shrink-0"
+                  title="My User Account"
+                >
+                  <UserCheck size={15} className="text-emerald-400 shrink-0" />
+                  <span className="hidden sm:inline font-bold">Hi, {userName || "User"}</span>
+                  <span className="sm:hidden font-extrabold">{userName ? userName.split(" ")[0] : "Logged In"}</span>
+                  <ChevronDown size={12} className={`text-emerald-400 transition-transform ${showUserDropdown ? "rotate-180" : ""}`} />
+                </button>
+
+                {/* Logged-In User Profile Dropdown Menu */}
+                {showUserDropdown && (
+                  <div className="absolute top-full right-0 mt-2 w-56 bg-slate-900 rounded-2xl shadow-2xl border border-slate-800 p-2 z-50 text-white animate-in fade-in slide-in-from-top-2 duration-200">
+                    <div className="px-3 py-2 border-b border-slate-800/80 mb-1">
+                      <p className="text-xs font-black text-white truncate">{userName || "User Profile"}</p>
+                      <p className="text-[10px] text-emerald-400 font-mono mt-0.5 truncate">{userPhone || "Verified Account"}</p>
+                    </div>
+
+                    <button
+                      onClick={() => {
+                        setShowUserProfileModal(true);
+                        setShowUserDropdown(false);
+                      }}
+                      className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-bold text-slate-200 hover:bg-slate-800 transition-colors"
+                    >
+                      <Edit size={14} className="text-amber-400" />
+                      <span>Edit Profile Form</span>
+                    </button>
+
+                    <button
+                      onClick={() => {
+                        setShowBookmarks(true);
+                        setShowUserDropdown(false);
+                      }}
+                      className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-bold text-slate-200 hover:bg-slate-800 transition-colors"
+                    >
+                      <Heart size={14} className="text-rose-400" />
+                      <span>Saved Bookmarks ({bookmarkCount})</span>
+                    </button>
+
+                    <button
+                      onClick={() => {
+                        router.push("/hot-deals");
+                        setShowUserDropdown(false);
+                      }}
+                      className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-bold text-slate-200 hover:bg-slate-800 transition-colors"
+                    >
+                      <Flame size={14} className="text-amber-400 fill-amber-400" />
+                      <span>Hot Deals & Offers</span>
+                    </button>
+
+                    <div className="pt-1 mt-1 border-t border-slate-800/80">
+                      <button
+                        onClick={handleLogout}
+                        className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-extrabold text-rose-400 hover:bg-rose-500/10 transition-colors"
+                      >
+                        <LogOut size={14} />
+                        <span>Sign Out / Logout</span>
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <button
+                onClick={() => setShowLogin(true)}
+                className="bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-600 hover:to-orange-600 text-slate-950 font-black px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-xl text-[11px] sm:text-xs flex items-center gap-1 shadow-lg shadow-orange-500/20 transition-all whitespace-nowrap shrink-0"
+              >
+                <User size={14} className="text-slate-950 shrink-0" />
+                <span className="hidden sm:inline">Login / Sign Up</span>
+                <span className="sm:hidden font-extrabold">Login</span>
+              </button>
+            )}
 
             {/* ☰ 3-LINE HAMBURGER MENU TOGGLE BUTTON (Visible on Mobile & Tablet) */}
             <button
@@ -384,14 +508,24 @@ export default function Navbar() {
 
               {/* Navigation Links List */}
               <div className="space-y-2">
-                {/* Highlighted Login / Sign Up Button inside Drawer */}
-                <button
-                  onClick={() => { setShowLogin(true); setMobileMenuOpen(false); }}
-                  className="w-full flex items-center justify-center gap-2 px-3.5 py-3 rounded-xl text-xs font-black text-slate-950 bg-gradient-to-r from-amber-500 to-orange-500 shadow-lg"
-                >
-                  <User size={16} className="text-slate-950" />
-                  <span>Login / Sign Up Now</span>
-                </button>
+                {/* User Status / Login Button inside Drawer */}
+                {isUserLoggedIn ? (
+                  <button
+                    onClick={() => { setShowUserProfileModal(true); setMobileMenuOpen(false); }}
+                    className="w-full flex items-center justify-center gap-2 px-3.5 py-3 rounded-xl text-xs font-black text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 shadow-lg"
+                  >
+                    <UserCheck size={16} />
+                    <span>Logged In: {userName || "User Profile"} ✏️</span>
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => { setShowLogin(true); setMobileMenuOpen(false); }}
+                    className="w-full flex items-center justify-center gap-2 px-3.5 py-3 rounded-xl text-xs font-black text-slate-950 bg-gradient-to-r from-amber-500 to-orange-500 shadow-lg"
+                  >
+                    <User size={16} className="text-slate-950" />
+                    <span>Login / Sign Up Now</span>
+                  </button>
+                )}
 
                 {/* Hot Deals & Flash Offers Link */}
                 <button
@@ -482,15 +616,25 @@ export default function Navbar() {
               </div>
             </div>
 
-            {/* Drawer Bottom Login Trigger */}
+            {/* Drawer Bottom Action */}
             <div className="pt-4 border-t border-slate-800">
-              <button
-                onClick={() => { setShowLogin(true); setMobileMenuOpen(false); }}
-                className="w-full bg-slate-800 hover:bg-slate-700 text-white font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-2"
-              >
-                <LogIn size={16} className="text-amber-400" />
-                <span>Login / Sign Up</span>
-              </button>
+              {isUserLoggedIn ? (
+                <button
+                  onClick={() => { handleLogout(); setMobileMenuOpen(false); }}
+                  className="w-full bg-rose-500/20 hover:bg-rose-500/30 text-rose-400 font-extrabold py-2.5 rounded-xl text-xs flex items-center justify-center gap-2 border border-rose-500/30"
+                >
+                  <LogOut size={16} />
+                  <span>Sign Out / Logout</span>
+                </button>
+              ) : (
+                <button
+                  onClick={() => { setShowLogin(true); setMobileMenuOpen(false); }}
+                  className="w-full bg-slate-800 hover:bg-slate-700 text-white font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-2"
+                >
+                  <LogIn size={16} className="text-amber-400" />
+                  <span>Login / Sign Up</span>
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -504,6 +648,15 @@ export default function Navbar() {
 
       {/* ✅ AI SMART MATCHMAKER CHATBOT */}
       {showAiBot && <AIChatbotModal isOpen={showAiBot} onClose={() => setShowAiBot(false)} />}
+
+      {/* ✅ USER PROFILE FORM MODAL */}
+      {showUserProfileModal && (
+        <UserProfileModal
+          isOpen={showUserProfileModal}
+          onClose={() => setShowUserProfileModal(false)}
+          onSaveSuccess={() => checkAuth()}
+        />
+      )}
     </>
   );
 }
