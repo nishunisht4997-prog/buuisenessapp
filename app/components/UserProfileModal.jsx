@@ -14,7 +14,7 @@ export default function UserProfileModal({ isOpen, onClose, onSaveSuccess }) {
   useEffect(() => {
     if (isOpen) {
       const savedPhone = localStorage.getItem("phone") || "+91 98765 43210";
-      const savedName = localStorage.getItem("userName") || "Nishat Anjum";
+      const savedName = localStorage.getItem("userName") || "";
       const savedEmail = localStorage.getItem("userEmail") || "";
       const savedCity = localStorage.getItem("userCity") || "Bhubaneswar";
 
