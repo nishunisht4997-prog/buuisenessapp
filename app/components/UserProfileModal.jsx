@@ -14,7 +14,7 @@ export default function UserProfileModal({ isOpen, onClose, onSaveSuccess }) {
   useEffect(() => {
     if (isOpen) {
       const savedPhone = localStorage.getItem("phone") || "+91 98765 43210";
-      const savedName = localStorage.getItem("userName") || "";
+      const savedName = localStorage.getItem("userName") || "Nishat Anjum";
       const savedEmail = localStorage.getItem("userEmail") || "";
       const savedCity = localStorage.getItem("userCity") || "Bhubaneswar";
 
@@ -123,7 +123,7 @@ export default function UserProfileModal({ isOpen, onClose, onSaveSuccess }) {
               <input
                 type="text"
                 required
-                placeholder="e.g. Nishat Kumar"
+                placeholder="e.g. Nishat Anjum"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 className="bg-transparent text-xs sm:text-sm text-white placeholder:text-slate-600 outline-none w-full font-bold"
