@@ -113,15 +113,8 @@ export default function RegisterPage() {
   const submitForm = async (e) => {
     if (e) e.preventDefault();
 
-    if (
-      !form.businessName ||
-      !form.categoryId ||
-      !form.subCategoryId ||
-      !form.stateId ||
-      !form.districtId ||
-      !form.areaId
-    ) {
-      alert("Please fill all required business and location fields");
+    if (!form.businessName) {
+      alert("Please enter your Business / Store Name");
       return;
     }
 
