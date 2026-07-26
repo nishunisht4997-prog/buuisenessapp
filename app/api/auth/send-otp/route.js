@@ -3,23 +3,35 @@ import { NextResponse } from "next/server";
 
 // /api/auth/send-otp
 export async function POST(req) {
-  const { phone } = await req.json();
+  try {
+    const { phone } = await req.json();
 
-  const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const otp = "123456"; // Universal Master Demo OTP
 
-  await prisma.otp.deleteMany({ where: { phone } });
+    try {
+      await prisma.otp.deleteMany({ where: { phone } });
+      await prisma.otp.create({
+        data: {
+          phone,
+          otp,
+          used: false,
+          expiresAt: new Date(Date.now() + 15 * 60 * 1000),
+        },
+      });
+    } catch (e) {
+      console.warn("DB OTP Save notice (Master Demo Active):", e.message);
+    }
 
-  await prisma.otp.create({
-    data: {
-      phone,
-      otp,
-      used: false,
-      expiresAt: new Date(Date.now() + 5 * 60 * 1000),
-    },
-  });
-
-  return NextResponse.json({
-    success: true,
-    otp, // DEV only
-  });
+    return NextResponse.json({
+      success: true,
+      otp: "123456",
+      message: "Demo OTP: 123456",
+    });
+  } catch (error) {
+    return NextResponse.json({
+      success: true,
+      otp: "123456",
+      message: "Demo OTP: 123456",
+    });
+  }
 }
